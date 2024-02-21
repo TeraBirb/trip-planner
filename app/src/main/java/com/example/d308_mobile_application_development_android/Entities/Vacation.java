@@ -13,10 +13,10 @@ public class Vacation {
 
     private String vacationTitle;
     private String accommodationName;
-    private Long startDate; // requires type conversion
-    private Long endDate; // requires type conversion
+    private String startDate; // requires type conversion
+    private String endDate; // requires type conversion
 
-    public Vacation(int vacationID, String vacationTitle, String accommodationName, Long startDate, Long endDate) {
+    public Vacation(int vacationID, String vacationTitle, String accommodationName, String startDate, String endDate) {
         this.vacationID = vacationID;
         this.vacationTitle = vacationTitle;
         this.accommodationName = accommodationName;
@@ -45,19 +45,19 @@ public class Vacation {
         this.accommodationName = accommodationName;
     }
 
-    public Long getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Long startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Long getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Long endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 }

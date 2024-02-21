@@ -105,7 +105,7 @@ public class VacationDetails extends AppCompatActivity {
                         vacationID = 1;
                     else
                         vacationID = repository.getAllVacations().get(repository.getAllVacations().size() - 1).getVacationID() + 1;
-                    vacation = new Vacation(vacationID, editTitle.getText().toString(), editAccommodation.getText().toString(), Long.parseLong((String) editStartDate.getText()), Long.parseLong((String) editEndDate.getText()));
+                    vacation = new Vacation(vacationID, editTitle.getText().toString(), editAccommodation.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString());
                 }
             }
         });
