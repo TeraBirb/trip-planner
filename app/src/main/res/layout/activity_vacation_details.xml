@@ -29,7 +29,7 @@
                 android:text="Vacation Title" />
 
             <EditText
-                android:id="@+id/editTextTitle"
+                android:id="@+id/editTextVacationTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -129,10 +129,11 @@
         android:id="@+id/buttonAddExcursion"
         android:layout_width="160dp"
         android:layout_height="40dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="48dp"
         android:text="Add Excursion..."
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recyclerViewExcursions" />
 
