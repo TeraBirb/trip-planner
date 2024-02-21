@@ -12,8 +12,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.d308_mobile_application_development_android.Database.Repository;
+import com.example.d308_mobile_application_development_android.Entities.Excursion;
 import com.example.d308_mobile_application_development_android.Entities.Vacation;
 import com.example.d308_mobile_application_development_android.R;
 
@@ -119,6 +121,29 @@ public class VacationDetails extends AppCompatActivity {
 
                 Intent intent = new Intent(VacationDetails.this, VacationList.class);
                 startActivity(intent);
+            }
+        });
+
+        Button buttonDeleteVacation = findViewById(R.id.buttonDeleteVacation);
+        buttonDeleteVacation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (Vacation vac : repository.getAllVacations()) {
+                    if (vac.getVacationID() == vacationID) currentVacation = vac;
+                }
+
+                numExursions = 0;
+                for (Excursion excursion : repository.getAllExcursions()) {
+                    if (excursion.getVacationID() == vacationID) ++numExursions;
+                }
+
+                if (numExursions == 0) {
+                    repository.delete(currentVacation);
+                    Toast.makeText(VacationDetails.this, currentVacation.getVacationTitle() + " was deleted.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(VacationDetails.this, "Please delete this vacation's excursions first.", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
