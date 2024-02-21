@@ -85,6 +85,8 @@ public class VacationDetails extends AppCompatActivity {
 
 
 //        RecyclerView recyclerView = findViewById(R.id.recyclerViewExcursions);
+        repository = new Repository(getApplication());
+
 
         Button buttonAddExcursion = findViewById(R.id.buttonAddExcursion);
         buttonAddExcursion.setOnClickListener(new View.OnClickListener() {
@@ -100,13 +102,23 @@ public class VacationDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Vacation vacation;
+                // New vacation
                 if (vacationID == -1) {
                     if (repository.getAllVacations().size() == 0)
                         vacationID = 1;
                     else
                         vacationID = repository.getAllVacations().get(repository.getAllVacations().size() - 1).getVacationID() + 1;
                     vacation = new Vacation(vacationID, editTitle.getText().toString(), editAccommodation.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString());
+                    repository.insert(vacation);
                 }
+                // Existing vacation
+                else {
+                    vacation = new Vacation(vacationID, editTitle.getText().toString(), editAccommodation.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString());
+                    repository.update(vacation);
+                }
+
+                Intent intent = new Intent(VacationDetails.this, VacationList.class);
+                startActivity(intent);
             }
         });
     }
