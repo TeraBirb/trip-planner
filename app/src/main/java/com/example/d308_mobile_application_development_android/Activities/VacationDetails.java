@@ -104,18 +104,29 @@ public class VacationDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Vacation vacation;
+
+                String title = editTitle.getText().toString();
+                String accommodation = editAccommodation.getText().toString();
+                String startDateString = editStartDate.getText().toString();
+                String endDateString = editEndDate.getText().toString();
+
+                if (title.equals("") || startDateString.equals("") || endDateString.equals("")) {
+                    Toast.makeText(VacationDetails.this, "Title, Start Date, and End Date are required.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 // New vacation
                 if (vacationID == -1) {
                     if (repository.getAllVacations().size() == 0)
                         vacationID = 1;
                     else
                         vacationID = repository.getAllVacations().get(repository.getAllVacations().size() - 1).getVacationID() + 1;
-                    vacation = new Vacation(vacationID, editTitle.getText().toString(), editAccommodation.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString());
+                    vacation = new Vacation(vacationID, title, accommodation, startDateString, endDateString);
                     repository.insert(vacation);
                 }
                 // Existing vacation
                 else {
-                    vacation = new Vacation(vacationID, editTitle.getText().toString(), editAccommodation.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString());
+                    vacation = new Vacation(vacationID, title, accommodation, startDateString, endDateString);
                     repository.update(vacation);
                 }
 
