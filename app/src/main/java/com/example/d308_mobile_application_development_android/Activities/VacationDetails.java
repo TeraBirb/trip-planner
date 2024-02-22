@@ -59,6 +59,7 @@ public class VacationDetails extends AppCompatActivity {
 
         String myFormat = "MM/dd/yy";
         sdf = new SimpleDateFormat(myFormat, Locale.US);
+        sdf.setLenient(false);
         myCalendarStart = Calendar.getInstance();
         myCalendarEnd = Calendar.getInstance();
 
@@ -113,6 +114,15 @@ public class VacationDetails extends AppCompatActivity {
                 // All required fields validation
                 if (title.equals("") || startDateString.equals("") || endDateString.equals("")) {
                     Toast.makeText(VacationDetails.this, "Title, Start Date, and End Date are required.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                // Correct date format for both fields validation
+                try {
+                    sdf.parse(startDateString);
+                    sdf.parse(endDateString);
+                } catch (ParseException e) {
+                    Toast.makeText(VacationDetails.this, "Make sure you use the correct date format (mm/dd/yy)", Toast.LENGTH_LONG).show();
                     return;
                 }
 
