@@ -229,6 +229,27 @@ public class VacationDetails extends AppCompatActivity {
                 Toast.makeText(VacationDetails.this, "Something went wrong during notification setup. :(", Toast.LENGTH_LONG).show();
             }
         }
+
+        if (item.getItemId() == R.id.share) {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction((Intent.ACTION_SEND));
+
+            // May eventually include a list of excursions
+            String sharedMessage = "Here are my trip details. "  + "\n" +
+                    "Trip: " + editTitle.getText().toString() + "\n" +
+                    "Staying at: " + editAccommodation.getText().toString() + "\n" +
+                    "Starts on: " + editStartDate.getText().toString() + "\n" +
+                    "Ends on: " + editEndDate.getText().toString();
+
+            sendIntent.putExtra(Intent.EXTRA_TEXT, sharedMessage);
+            sendIntent.putExtra(Intent.EXTRA_TITLE, editTitle.getText().toString());
+            sendIntent.setType("text/plain");
+
+            Intent shareIntent = Intent.createChooser(sendIntent, null);
+            startActivity(shareIntent);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
