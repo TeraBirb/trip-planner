@@ -110,8 +110,15 @@ public class VacationDetails extends AppCompatActivity {
                 String startDateString = editStartDate.getText().toString();
                 String endDateString = editEndDate.getText().toString();
 
+                // All required fields validation
                 if (title.equals("") || startDateString.equals("") || endDateString.equals("")) {
                     Toast.makeText(VacationDetails.this, "Title, Start Date, and End Date are required.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                // Date end and start validation
+                if (myCalendarStart.compareTo(myCalendarEnd) > 0) {
+                    Toast.makeText(VacationDetails.this, "End Date must be after the Start Date.", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -151,6 +158,8 @@ public class VacationDetails extends AppCompatActivity {
                 if (numExursions == 0) {
                     repository.delete(currentVacation);
                     Toast.makeText(VacationDetails.this, currentVacation.getVacationTitle() + " was deleted.", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(VacationDetails.this, VacationList.class);
+                    startActivity(intent);
                 }
                 else {
                     Toast.makeText(VacationDetails.this, "Please delete this vacation's excursions first.", Toast.LENGTH_LONG).show();
