@@ -79,8 +79,6 @@ public class VacationDetails extends AppCompatActivity {
 
         vacationID = getIntent().getIntExtra("id", -1);
 
-        // BE SUSPICIOSO !!!!!!!!!!!!!!!!!!!!!!!
-
         startDate = getIntent().getStringExtra("start date");
         editStartDate = findViewById(R.id.editTextStartDate);
         editStartDate.setText(startDate);
@@ -117,26 +115,8 @@ public class VacationDetails extends AppCompatActivity {
                 String startDateString = editStartDate.getText().toString();
                 String endDateString = editEndDate.getText().toString();
 
-                // All required fields validation
-                if (title.equals("") || startDateString.equals("") || endDateString.equals("")) {
-                    Toast.makeText(VacationDetails.this, "Title, Start Date, and End Date are required.", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                // Correct date format for both fields validation
-                try {
-                    sdf.parse(startDateString);
-                    sdf.parse(endDateString);
-                } catch (ParseException e) {
-                    Toast.makeText(VacationDetails.this, "Make sure you use the correct date format (mm/dd/yy)", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                // Date end and start validation
-                if (myCalendarStart.compareTo(myCalendarEnd) > 0) {
-                    Toast.makeText(VacationDetails.this, "End Date must be after the Start Date.", Toast.LENGTH_LONG).show();
-                    return;
-                }
+                // all required fields, correct date formatting, start date before end date
+                if (!dataInputValidation()) return;
 
                 // New vacation
                 if (vacationID == -1) {
@@ -192,12 +172,16 @@ public class VacationDetails extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        // all required fields, correct date formatting, start date before end date
+        if (!dataInputValidation()) return false;
+
         // Make sure you have Notifications Enabled in your device emulator settings.
         // Toast still works regardless.
         if (item.getItemId() == R.id.notify) {
             Date myDateStart = null;
             Date myDateEnd = null;
-            // Check date formatting
+
             try {
                 myDateStart = sdf.parse(editStartDate.getText().toString());
                 myDateEnd = sdf.parse(editEndDate.getText().toString());
@@ -225,7 +209,7 @@ public class VacationDetails extends AppCompatActivity {
                                 editStartDate.getText().toString() + " and " + editEndDate.getText().toString(),
                         Toast.LENGTH_LONG).show();
 
-             } catch (Exception e) {
+            } catch (Exception e) {
                 Toast.makeText(VacationDetails.this, "Something went wrong during notification setup. :(", Toast.LENGTH_LONG).show();
             }
         }
@@ -235,7 +219,7 @@ public class VacationDetails extends AppCompatActivity {
             sendIntent.setAction((Intent.ACTION_SEND));
 
             // May eventually include a list of excursions
-            String sharedMessage = "Here are my trip details. "  + "\n" +
+            String sharedMessage = "Here are my trip details. " + "\n" +
                     "Trip: " + editTitle.getText().toString() + "\n" +
                     "Staying at: " + editAccommodation.getText().toString() + "\n" +
                     "Starts on: " + editStartDate.getText().toString() + "\n" +
@@ -303,5 +287,36 @@ public class VacationDetails extends AppCompatActivity {
 
     private void updateEndDateLabel() {
         editEndDate.setText(sdf.format(myCalendarEnd.getTime()));
+    }
+
+    private boolean dataInputValidation() {
+
+        String title = editTitle.getText().toString();
+        String startDateString = editStartDate.getText().toString();
+        String endDateString = editEndDate.getText().toString();
+
+        // All required fields validation
+        if (title.equals("") || startDateString.equals("") || endDateString.equals("")) {
+            Toast.makeText(VacationDetails.this, "Title, Start Date, and End Date are required.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        // Correct date format for both fields validation
+        Date compareDateStart;
+        Date compareDateEnd;
+        try {
+            compareDateStart = sdf.parse(startDateString);
+            compareDateEnd = sdf.parse(endDateString);
+        } catch (ParseException e) {
+            Toast.makeText(VacationDetails.this, "Make sure you use the correct date format (mm/dd/yy)", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        // Date end and start validation
+        if (compareDateStart.compareTo(compareDateEnd) > 0) {
+            Toast.makeText(VacationDetails.this, "End Date must be after the Start Date.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
     }
 }
