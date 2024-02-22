@@ -1,12 +1,18 @@
 package com.example.d308_mobile_application_development_android.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -176,6 +182,54 @@ public class VacationDetails extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_vacation_details, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // Make sure you have Notifications Enabled in your device emulator settings.
+        // Toast still works regardless.
+        if (item.getItemId() == R.id.notify) {
+            Date myDateStart = null;
+            Date myDateEnd = null;
+            // Check date formatting
+            try {
+                myDateStart = sdf.parse(editStartDate.getText().toString());
+                myDateEnd = sdf.parse(editEndDate.getText().toString());
+            } catch (ParseException e) {
+                Toast.makeText(VacationDetails.this, "Make sure you use the correct date format (mm/dd/yy)", Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+            try {
+                Long triggerStart = myDateStart.getTime();
+                Long triggerEnd = myDateEnd.getTime();
+
+                Intent intentStart = new Intent(VacationDetails.this, MyReceiver.class);
+                Intent intentEnd = new Intent(VacationDetails.this, MyReceiver.class);
+                intentStart.putExtra("key", editTitle.getText().toString() + " is starting today!");
+                intentEnd.putExtra("key", editTitle.getText().toString() + " is ending today.");
+                PendingIntent senderStart = PendingIntent.getBroadcast(VacationDetails.this, ++MainActivity.numAlert, intentStart, PendingIntent.FLAG_IMMUTABLE);
+                PendingIntent senderEnd = PendingIntent.getBroadcast(VacationDetails.this, ++MainActivity.numAlert, intentEnd, PendingIntent.FLAG_IMMUTABLE);
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, triggerStart, senderStart);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, triggerEnd, senderEnd);
+
+                Toast.makeText(VacationDetails.this, "Notifications set for " +
+                                editStartDate.getText().toString() + " and " + editEndDate.getText().toString(),
+                        Toast.LENGTH_LONG).show();
+
+             } catch (Exception e) {
+                Toast.makeText(VacationDetails.this, "Something went wrong during notification setup. :(", Toast.LENGTH_LONG).show();
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setUpStartDatePickerListener() {
