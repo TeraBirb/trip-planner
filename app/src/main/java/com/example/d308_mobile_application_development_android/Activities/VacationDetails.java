@@ -2,6 +2,7 @@ package com.example.d308_mobile_application_development_android.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
@@ -27,8 +28,10 @@ import com.example.d308_mobile_application_development_android.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class VacationDetails extends AppCompatActivity {
@@ -90,10 +93,17 @@ public class VacationDetails extends AppCompatActivity {
         setUpStartDatePickerListener();
         setUpEndDatePickerListener();
 
-
-//        RecyclerView recyclerView = findViewById(R.id.recyclerViewExcursions);
+        // List of associated excursions
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewExcursions);
         repository = new Repository(getApplication());
-
+        final ExcursionAdapter excursionAdapter = new ExcursionAdapter(this);
+        recyclerView.setAdapter(excursionAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        List<Excursion> filteredExcursions = new ArrayList<>();
+        for (Excursion e : repository.getAllExcursions()) {
+            if (e.getVacationID() == vacationID) filteredExcursions.add(e);
+        }
+        excursionAdapter.setExcursions(filteredExcursions);
 
         Button buttonAddExcursion = findViewById(R.id.buttonAddExcursion);
         buttonAddExcursion.setOnClickListener(new View.OnClickListener() {
