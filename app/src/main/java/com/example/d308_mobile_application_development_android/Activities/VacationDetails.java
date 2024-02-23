@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
@@ -38,7 +37,7 @@ public class VacationDetails extends AppCompatActivity {
 
     int vacationID;
     String vacationTitle;
-    String accomomdationName;
+    String accommodationName;
 
     String startDate;
 
@@ -58,7 +57,7 @@ public class VacationDetails extends AppCompatActivity {
     SimpleDateFormat sdf;
 
     Vacation currentVacation;
-    int numExursions;
+    int numExcursions;
 
 
     @Override
@@ -76,9 +75,9 @@ public class VacationDetails extends AppCompatActivity {
         editTitle = findViewById(R.id.editTextVacationTitle);
         editTitle.setText(vacationTitle);
 
-        accomomdationName = getIntent().getStringExtra("staying at");
+        accommodationName = getIntent().getStringExtra("staying at");
         editAccommodation = findViewById(R.id.editTextStayingAt);
-        editAccommodation.setText(accomomdationName);
+        editAccommodation.setText(accommodationName);
 
         vacationID = getIntent().getIntExtra("id", -1);
 
@@ -159,12 +158,12 @@ public class VacationDetails extends AppCompatActivity {
                     if (vac.getVacationID() == vacationID) currentVacation = vac;
                 }
 
-                numExursions = 0;
+                numExcursions = 0;
                 for (Excursion excursion : repository.getAllExcursions()) {
-                    if (excursion.getVacationID() == vacationID) ++numExursions;
+                    if (excursion.getVacationID() == vacationID) ++numExcursions;
                 }
 
-                if (numExursions == 0) {
+                if (numExcursions == 0) {
                     repository.delete(currentVacation);
                     Toast.makeText(VacationDetails.this, currentVacation.getVacationTitle() + " was deleted.", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(VacationDetails.this, VacationList.class);
