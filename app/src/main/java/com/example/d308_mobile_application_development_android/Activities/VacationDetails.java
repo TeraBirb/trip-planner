@@ -105,6 +105,7 @@ public class VacationDetails extends AppCompatActivity {
         }
         excursionAdapter.setExcursions(filteredExcursions);
 
+        // Add excursion button
         Button buttonAddExcursion = findViewById(R.id.buttonAddExcursion);
         buttonAddExcursion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +115,7 @@ public class VacationDetails extends AppCompatActivity {
             }
         });
 
+        // Save Vacation button
         Button buttonSaveVacation = findViewById(R.id.buttonSaveVacation);
         buttonSaveVacation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +150,7 @@ public class VacationDetails extends AppCompatActivity {
             }
         });
 
+        // Delete Vacation button
         Button buttonDeleteVacation = findViewById(R.id.buttonDeleteVacation);
         buttonDeleteVacation.setOnClickListener(new View.OnClickListener() {
             @Override
