@@ -164,6 +164,12 @@ public class VacationDetails extends AppCompatActivity {
         buttonDeleteVacation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (vacationID == -1) {
+                    finish();
+                    return;
+                }
+
                 for (Vacation vac : repository.getAllVacations()) {
                     if (vac.getVacationID() == vacationID) currentVacation = vac;
                 }
