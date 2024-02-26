@@ -109,8 +109,15 @@ public class VacationDetails extends AppCompatActivity {
         buttonAddExcursion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(VacationDetails.this, ExcursionDetails.class);
-                startActivity(intent);
+                if (vacationID == -1) {
+                    Toast.makeText(VacationDetails.this, "Please save vacation before adding excursions", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Intent intent = new Intent(VacationDetails.this, ExcursionDetails.class);
+                    // so the excursion knows which vacation it belongs to
+                    intent.putExtra("vacID", vacationID);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -137,11 +144,13 @@ public class VacationDetails extends AppCompatActivity {
                         vacationID = repository.getAllVacations().get(repository.getAllVacations().size() - 1).getVacationID() + 1;
                     vacation = new Vacation(vacationID, title, accommodation, startDateString, endDateString);
                     repository.insert(vacation);
+                    Toast.makeText(VacationDetails.this, editTitle.getText().toString() + " was added.", Toast.LENGTH_LONG).show();
                 }
                 // Existing vacation
                 else {
                     vacation = new Vacation(vacationID, title, accommodation, startDateString, endDateString);
                     repository.update(vacation);
+                    Toast.makeText(VacationDetails.this, editTitle.getText().toString() + " was updated.", Toast.LENGTH_LONG).show();
                 }
 
                 Intent intent = new Intent(VacationDetails.this, VacationList.class);
@@ -185,12 +194,10 @@ public class VacationDetails extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        // all required fields, correct date formatting, start date before end date
-        if (!dataInputValidation()) return false;
-
         // Make sure you have Notifications Enabled in your device emulator settings.
         // Toast still works regardless.
         if (item.getItemId() == R.id.notify) {
+            if (!dataInputValidation()) return false;
             Date myDateStart = null;
             Date myDateEnd = null;
 
@@ -227,6 +234,7 @@ public class VacationDetails extends AppCompatActivity {
         }
 
         if (item.getItemId() == R.id.share) {
+            if (!dataInputValidation()) return false;
             Intent sendIntent = new Intent();
             sendIntent.setAction((Intent.ACTION_SEND));
 
@@ -247,6 +255,21 @@ public class VacationDetails extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // same code as onCreate, throws NullPointerException when put into a function
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewExcursions);
+        final ExcursionAdapter excursionAdapter = new ExcursionAdapter(this);
+        recyclerView.setAdapter(excursionAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        List<Excursion> filteredExcursions = new ArrayList<>();
+        for (Excursion e : repository.getAllExcursions()) {
+            if (e.getVacationID() == vacationID) filteredExcursions.add(e);
+        }
+        excursionAdapter.setExcursions(filteredExcursions);
     }
 
     private void setUpStartDatePickerListener() {
