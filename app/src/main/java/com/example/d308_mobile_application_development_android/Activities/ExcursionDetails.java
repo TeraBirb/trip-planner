@@ -117,21 +117,20 @@ public class ExcursionDetails extends AppCompatActivity {
         buttonDeleteExcursion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (excursionID == -1) {
+                    finish();
+                    return;
+                }
+
                 for (Excursion e : repository.getAllExcursions()) {
                     if (e.getExcursionID() == excursionID) currentExcursion = e;
                 }
+
                 repository.delete(currentExcursion);
                 Toast.makeText(ExcursionDetails.this, currentExcursion.getExcursionTitle() + " was deleted.", Toast.LENGTH_LONG).show();
                 finish();
             }
         });
-
-
-//        ArrayAdapter<Integer> vacationIdAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, vacationIdList);
-//        Spinner spinner = findViewById(R.id.spinnerExcursionDetails);
-
-
-
     }
 
     @Override
@@ -266,6 +265,25 @@ public class ExcursionDetails extends AppCompatActivity {
             inputDate = sdf.parse(dateString);
         } catch (ParseException e) {
             Toast.makeText(ExcursionDetails.this, "Make sure you use the correct date format (mm/dd/yy)", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        // Date falls within parent vacation date
+        Date vacationStartDate = null;
+        Date vacationEndDate = null;
+
+        for (Vacation v : repository.getAllVacations()) {
+            if (v.getVacationID() == vacationID) {
+                try {
+                    vacationStartDate = sdf.parse(v.getStartDate());
+                    vacationEndDate = sdf.parse(v.getEndDate());
+                } catch (ParseException e) {
+                    Toast.makeText(ExcursionDetails.this, "Something went wrong during vacation date parsing. :(", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+        if (inputDate.before(vacationStartDate) || inputDate.after(vacationEndDate)) {
+            Toast.makeText(ExcursionDetails.this, "The excursion date must fall within the vacation start and end dates.", Toast.LENGTH_LONG).show();
             return false;
         }
 
