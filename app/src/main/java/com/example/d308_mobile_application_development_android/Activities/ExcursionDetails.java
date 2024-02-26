@@ -20,6 +20,7 @@ import com.example.d308_mobile_application_development_android.Entities.Excursio
 import com.example.d308_mobile_application_development_android.Entities.Vacation;
 import com.example.d308_mobile_application_development_android.R;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -78,6 +79,7 @@ public class ExcursionDetails extends AppCompatActivity {
         buttonSaveExcursion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!dataInputValidation()) return;
 
                 Excursion excursion;
 
@@ -187,6 +189,29 @@ public class ExcursionDetails extends AppCompatActivity {
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
+    }
+    private boolean dataInputValidation() {
+
+        String title = editTitle.getText().toString();
+        String dateString = editDate.getText().toString();
+
+        // All required fields validation
+        if (title.equals("") || dateString.equals("") ) {
+            Toast.makeText(ExcursionDetails.this, "Title and date are required.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        // Correct date format for both fields validation
+        sdf.setLenient(false);
+        Date inputDate;
+        try {
+            inputDate = sdf.parse(dateString);
+        } catch (ParseException e) {
+            Toast.makeText(ExcursionDetails.this, "Make sure you use the correct date format (mm/dd/yy)", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
     }
 
 }
