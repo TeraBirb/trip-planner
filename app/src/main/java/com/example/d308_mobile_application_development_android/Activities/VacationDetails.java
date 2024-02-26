@@ -58,6 +58,7 @@ public class VacationDetails extends AppCompatActivity {
 
     Vacation currentVacation;
     int numExcursions;
+    List<Excursion> filteredExcursions;
 
 
     @Override
@@ -98,7 +99,7 @@ public class VacationDetails extends AppCompatActivity {
         final ExcursionAdapter excursionAdapter = new ExcursionAdapter(this);
         recyclerView.setAdapter(excursionAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        List<Excursion> filteredExcursions = new ArrayList<>();
+        filteredExcursions = new ArrayList<>();
         for (Excursion e : repository.getAllExcursions()) {
             if (e.getVacationID() == vacationID) filteredExcursions.add(e);
         }
@@ -238,12 +239,18 @@ public class VacationDetails extends AppCompatActivity {
             Intent sendIntent = new Intent();
             sendIntent.setAction((Intent.ACTION_SEND));
 
-            // May eventually include a list of excursions
+            StringBuilder stringFilteredExcursions = new StringBuilder();
+
+            for (Excursion e : filteredExcursions) {
+                stringFilteredExcursions.append(e.getExcursionTitle()).append("\n");
+            }
+
             String sharedMessage = "Here are my trip details. " + "\n" +
                     "Trip: " + editTitle.getText().toString() + "\n" +
                     "Staying at: " + editAccommodation.getText().toString() + "\n" +
                     "Starts on: " + editStartDate.getText().toString() + "\n" +
-                    "Ends on: " + editEndDate.getText().toString();
+                    "Ends on: " + editEndDate.getText().toString() + "\n" +
+                    "Excursions:" + "\n" + stringFilteredExcursions.toString();
 
             sendIntent.putExtra(Intent.EXTRA_TEXT, sharedMessage);
             sendIntent.putExtra(Intent.EXTRA_TITLE, editTitle.getText().toString());
@@ -265,7 +272,7 @@ public class VacationDetails extends AppCompatActivity {
         final ExcursionAdapter excursionAdapter = new ExcursionAdapter(this);
         recyclerView.setAdapter(excursionAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        List<Excursion> filteredExcursions = new ArrayList<>();
+        filteredExcursions = new ArrayList<>();
         for (Excursion e : repository.getAllExcursions()) {
             if (e.getVacationID() == vacationID) filteredExcursions.add(e);
         }
