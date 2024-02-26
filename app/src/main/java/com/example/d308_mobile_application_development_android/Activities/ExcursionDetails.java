@@ -2,9 +2,13 @@ package com.example.d308_mobile_application_development_android.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -129,6 +133,13 @@ public class ExcursionDetails extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_vacation_details, menu);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -147,6 +158,53 @@ public class ExcursionDetails extends AppCompatActivity {
             }
             startActivity(intent);
             finish();
+            return true;
+        }
+        // Make sure you have Notifications Enabled in your device emulator settings.
+        // Toast still works regardless.
+        if (item.getItemId() == R.id.notify) {
+            if (!dataInputValidation()) return false;
+            Date myDate = null;
+
+            try {
+                myDate = sdf.parse(editDate.getText().toString());
+            } catch (ParseException e) {
+                Toast.makeText(ExcursionDetails.this, "Make sure you use the correct date format (mm/dd/yy)", Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+            try {
+                Long triggerDate = myDate.getTime();
+
+                Intent intent = new Intent(ExcursionDetails.this, MyReceiver.class);
+                intent.putExtra("key", editTitle.getText().toString() + " is today!");
+                PendingIntent sender = PendingIntent.getBroadcast(ExcursionDetails.this, ++MainActivity.numAlert, intent, PendingIntent.FLAG_IMMUTABLE);
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, triggerDate, sender);
+
+                Toast.makeText(ExcursionDetails.this, "Notification set for " + editDate.getText().toString(), Toast.LENGTH_LONG).show();
+
+            } catch (Exception e) {
+                Toast.makeText(ExcursionDetails.this, "Something went wrong during notification setup. :(", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        if (item.getItemId() == R.id.share) {
+            if (!dataInputValidation()) return false;
+            Intent sendIntent = new Intent();
+            sendIntent.setAction((Intent.ACTION_SEND));
+
+            String sharedMessage = "Here are my excursion details. " + "\n" +
+                    "Excursion: " + editTitle.getText().toString() + "\n" +
+                    "Date: " + editDate.getText().toString();
+
+            sendIntent.putExtra(Intent.EXTRA_TEXT, sharedMessage);
+            sendIntent.putExtra(Intent.EXTRA_TITLE, editTitle.getText().toString());
+            sendIntent.setType("text/plain");
+
+            Intent shareIntent = Intent.createChooser(sendIntent, null);
+            startActivity(shareIntent);
             return true;
         }
         return super.onOptionsItemSelected(item);
