@@ -23,6 +23,3 @@ Press save to add the excursion to the associated vacation. Vacations with saved
 ### System requirements
 Target SDK: 34 (Android 13)  
 Minimum SDK: 26 (Android 8.0)
-
-### Git Repository
-https://gitlab.com/wgu-gitlab-environment/student-repos/icallan/d308-mobile-application-development-android
