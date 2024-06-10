@@ -1,6 +1,7 @@
 package com.example.d308_mobile_application_development_android.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -29,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class ExcursionDetails extends AppCompatActivity {
@@ -45,6 +47,8 @@ public class ExcursionDetails extends AppCompatActivity {
     DatePickerDialog.OnDateSetListener dateListener;
     Calendar myCalendar;
     SimpleDateFormat sdf;
+    List<Vacation> vacationList;
+    List<Excursion> excursionList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,16 +73,19 @@ public class ExcursionDetails extends AppCompatActivity {
         myCalendar = Calendar.getInstance();
         setUpDatePickerListener();
 
-        // Set up Vacation ID list to match with corresponding Excursions
-        ArrayList<Vacation> vacationArrayList = new ArrayList<>();
-        vacationArrayList.addAll(repository.getAllVacations());
-        ArrayList<Integer> vacationIdList = new ArrayList<>();
-        for (Vacation vacation : vacationArrayList) {
-            vacationIdList.add(vacation.getVacationID());
-        }
+        // Observe vacation data
+        repository.getAllVacations().observe(this, new Observer<List<Vacation>>() {
+            @Override
+            public void onChanged(List<Vacation> vacations) {
+                vacationList = vacations;
+                ArrayList<Integer> vacationIdList = new ArrayList<>();
+                for (Vacation vacation : vacations) {
+                    vacationIdList.add(vacation.getVacationID());
+                }
+            }
+        });
 
         // Save (add or update) Excursion Button
-
         Button buttonSaveExcursion = findViewById(R.id.buttonSaveExcursion);
         buttonSaveExcursion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,12 +97,12 @@ public class ExcursionDetails extends AppCompatActivity {
                 // adding a new excursion
                 if (excursionID == -1) {
                     // if there are no excursions yet in the database
-                    if (repository.getAllExcursions().size() == 0) {
+                    if (excursionList.size() == 0) {
                         excursionID = 1;
                     }
                     else {
-                        int lastExcursionIndex = repository.getAllExcursions().size() - 1;
-                        excursionID = repository.getAllExcursions().get(lastExcursionIndex).getExcursionID() + 1;
+                        int lastExcursionIndex = excursionList.size() - 1;
+                        excursionID = excursionList.get(lastExcursionIndex).getExcursionID() + 1;
                     }
                     excursion = new Excursion(excursionID, editTitle.getText().toString(), editDate.getText().toString(), vacationID);
                     repository.insert(excursion);
@@ -112,7 +119,6 @@ public class ExcursionDetails extends AppCompatActivity {
         });
 
         // Delete Excursion Button
-
         Button buttonDeleteExcursion = findViewById(R.id.buttonDeleteExcursion);
         buttonDeleteExcursion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +128,7 @@ public class ExcursionDetails extends AppCompatActivity {
                     return;
                 }
 
-                for (Excursion e : repository.getAllExcursions()) {
+                for (Excursion e : excursionList) {
                     if (e.getExcursionID() == excursionID) currentExcursion = e;
                 }
 
@@ -147,7 +153,7 @@ public class ExcursionDetails extends AppCompatActivity {
             Intent intent = new Intent(this, VacationDetails.class);
             intent.putExtra("id", vacationID);
 
-            for (Vacation v : repository.getAllVacations()) {
+            for (Vacation v : vacationList) {
                 if (v.getVacationID() == vacationID) {
                     intent.putExtra("name", v.getVacationTitle());
                     intent.putExtra("staying at", v.getAccommodationName());
@@ -215,7 +221,7 @@ public class ExcursionDetails extends AppCompatActivity {
         super.onBackPressed();
         Intent intent = new Intent(ExcursionDetails.this, VacationDetails.class);
         intent.putExtra("id", vacationID);
-        for (Vacation v : repository.getAllVacations()) {
+        for (Vacation v : vacationList) {
             if (v.getVacationID() == vacationID) {
                 intent.putExtra("name", v.getVacationTitle());
                 intent.putExtra("staying at", v.getAccommodationName());
@@ -272,7 +278,7 @@ public class ExcursionDetails extends AppCompatActivity {
         Date vacationStartDate = null;
         Date vacationEndDate = null;
 
-        for (Vacation v : repository.getAllVacations()) {
+        for (Vacation v : vacationList) {
             if (v.getVacationID() == vacationID) {
                 try {
                     vacationStartDate = sdf.parse(v.getStartDate());
