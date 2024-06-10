@@ -1,5 +1,6 @@
 package com.example.d308_mobile_application_development_android.DAO;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -20,5 +21,5 @@ public interface ExcursionDAO {
     @Delete
     void delete(Excursion excursion);
     @Query("SELECT * FROM EXCURSIONS ORDER BY excursionID ASC")
-    List<Excursion> getAllExcursions();
+    LiveData<List<Excursion>> getAllExcursions();
 }

@@ -1,4 +1,4 @@
-# D308 Trip Planner
+# Trip Planner
 
 The purpose of this application is to satisfy the requirements for the course D308 Mobile Application Development.
 
