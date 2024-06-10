@@ -2,6 +2,8 @@ package com.example.d308_mobile_application_development_android.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -60,11 +62,15 @@ public class VacationDetails extends AppCompatActivity {
     int numExcursions;
     List<Excursion> filteredExcursions;
 
+    private VacationViewModel vacationViewModel;
+    private ExcursionAdapter excursionAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vacation_details);
+        repository = new Repository(getApplication());
 
         String myFormat = "MM/dd/yy";
         sdf = new SimpleDateFormat(myFormat, Locale.US);
@@ -93,30 +99,54 @@ public class VacationDetails extends AppCompatActivity {
         setUpStartDatePickerListener();
         setUpEndDatePickerListener();
 
+        filteredExcursions = new ArrayList<Excursion>();
+
+        vacationViewModel = new ViewModelProvider(this, new VacationViewModelFactory(repository)).get(VacationViewModel.class);
+        final int[] vacationID = {getIntent().getIntExtra("id", -1)};
+        if (vacationID[0] != -1) {
+            vacationViewModel.loadVacation(vacationID[0]);
+            // Observe the vacation data
+            vacationViewModel.getVacation().observe(this, vacation -> {
+                if (vacation != null) {
+                    editTitle.setText(vacation.getVacationTitle());
+                    editAccommodation.setText(vacation.getAccommodationName());
+                    editStartDate.setText(vacation.getStartDate());
+                    editEndDate.setText(vacation.getEndDate());
+                }
+            });
+        }
+
         // List of associated excursions
         RecyclerView recyclerView = findViewById(R.id.recyclerViewExcursions);
-        repository = new Repository(getApplication());
         final ExcursionAdapter excursionAdapter = new ExcursionAdapter(this);
         recyclerView.setAdapter(excursionAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        filteredExcursions = new ArrayList<>();
-        for (Excursion e : repository.getAllExcursions()) {
-            if (e.getVacationID() == vacationID) filteredExcursions.add(e);
-        }
-        excursionAdapter.setExcursions(filteredExcursions);
+
+        repository.getAllExcursions().observe(this, new Observer<List<Excursion>>() {
+            @Override
+            public void onChanged(List<Excursion> allExcursions) {
+                filteredExcursions.clear();
+                for (Excursion e : allExcursions) {
+                    if (e.getVacationID() == vacationID[0]) {
+                        filteredExcursions.add(e);
+                    }
+                }
+                excursionAdapter.setExcursions(filteredExcursions);
+            }
+        });
 
         // Add excursion button
         Button buttonAddExcursion = findViewById(R.id.buttonAddExcursion);
         buttonAddExcursion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (vacationID == -1) {
+                if (vacationID[0] == -1) {
                     Toast.makeText(VacationDetails.this, "Please save vacation before adding excursions", Toast.LENGTH_LONG).show();
                 }
                 else {
                     Intent intent = new Intent(VacationDetails.this, ExcursionDetails.class);
                     // so the excursion knows which vacation it belongs to
-                    intent.putExtra("vacID", vacationID);
+                    intent.putExtra("vacID", vacationID[0]);
                     startActivity(intent);
                 }
             }
@@ -127,7 +157,7 @@ public class VacationDetails extends AppCompatActivity {
         buttonSaveVacation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Vacation vacation;
+                final Vacation[] vacation = new Vacation[1];
 
                 String title = editTitle.getText().toString();
                 String accommodation = editAccommodation.getText().toString();
@@ -137,27 +167,33 @@ public class VacationDetails extends AppCompatActivity {
                 // all required fields, correct date formatting, start date before end date
                 if (!dataInputValidation()) return;
 
-                // New vacation
-                if (vacationID == -1) {
-                    if (repository.getAllVacations().size() == 0)
-                        vacationID = 1;
-                    else
-                        vacationID = repository.getAllVacations().get(repository.getAllVacations().size() - 1).getVacationID() + 1;
-                    vacation = new Vacation(vacationID, title, accommodation, startDateString, endDateString);
-                    repository.insert(vacation);
-                    Toast.makeText(VacationDetails.this, editTitle.getText().toString() + " was added.", Toast.LENGTH_LONG).show();
-                }
-                // Existing vacation
-                else {
-                    vacation = new Vacation(vacationID, title, accommodation, startDateString, endDateString);
-                    repository.update(vacation);
-                    Toast.makeText(VacationDetails.this, editTitle.getText().toString() + " was updated.", Toast.LENGTH_LONG).show();
-                }
+                repository.getAllVacations().observe(VacationDetails.this, new Observer<List<Vacation>>() {
+                    @Override
+                    public void onChanged(List<Vacation> vacations) {
+                        if (vacations != null) {
+                            // New vacation
+                            if (vacationID[0] == -1) {
+                                if (vacations.isEmpty())
+                                    vacationID[0] = 1;
+                                else
+                                    vacationID[0] = vacations.get(vacations.size() - 1).getVacationID() + 1;
+                                vacation[0] = new Vacation(vacationID[0], title, accommodation, startDateString, endDateString);
+                                repository.insert(vacation[0]);
+                                Toast.makeText(VacationDetails.this, title + " was added.", Toast.LENGTH_LONG).show();
+                            } else {
+                                vacation[0] = new Vacation(vacationID[0], title, accommodation, startDateString, endDateString);
+                                repository.update(vacation[0]);
+                                Toast.makeText(VacationDetails.this, title + " was updated.", Toast.LENGTH_LONG).show();
+                            }
 
-                Intent intent = new Intent(VacationDetails.this, VacationList.class);
-                startActivity(intent);
+                            Intent intent = new Intent(VacationDetails.this, VacationList.class);
+                            startActivity(intent);
+                        }
+                    }
+                });
             }
         });
+
 
         // Delete Vacation button
         Button buttonDeleteVacation = findViewById(R.id.buttonDeleteVacation);
@@ -165,33 +201,41 @@ public class VacationDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (vacationID == -1) {
+                if (vacationID[0] == -1) {
                     finish();
                     return;
                 }
 
-                for (Vacation vac : repository.getAllVacations()) {
-                    if (vac.getVacationID() == vacationID) currentVacation = vac;
-                }
+                repository.getAllVacations().observe(VacationDetails.this, new Observer<List<Vacation>>() {
+                    @Override
+                    public void onChanged(List<Vacation> vacations) {
+                        if (vacations != null) {
+                            for (Vacation vac : vacations) {
+                                if (vac.getVacationID() == vacationID[0]) {
+                                    currentVacation = vac;
+                                    break;
+                                }
+                            }
 
-                numExcursions = 0;
-                for (Excursion excursion : repository.getAllExcursions()) {
-                    if (excursion.getVacationID() == vacationID) ++numExcursions;
-                }
+                            numExcursions = 0;
+                            for (Excursion excursion : repository.getAllExcursions().getValue()) {
+                                if (excursion.getVacationID() == vacationID[0]) ++numExcursions;
+                            }
 
-                if (numExcursions == 0) {
-                    repository.delete(currentVacation);
-                    Toast.makeText(VacationDetails.this, currentVacation.getVacationTitle() + " was deleted.", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(VacationDetails.this, VacationList.class);
-                    startActivity(intent);
-                }
-                else {
-                    Toast.makeText(VacationDetails.this, "Please delete this vacation's excursions first.", Toast.LENGTH_LONG).show();
-                }
+                            if (numExcursions == 0) {
+                                repository.delete(currentVacation);
+                                Toast.makeText(VacationDetails.this, currentVacation.getVacationTitle() + " was deleted.", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(VacationDetails.this, VacationList.class);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(VacationDetails.this, "Please delete this vacation's excursions first.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                });
             }
         });
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_vacation_details, menu);
@@ -278,11 +322,18 @@ public class VacationDetails extends AppCompatActivity {
         final ExcursionAdapter excursionAdapter = new ExcursionAdapter(this);
         recyclerView.setAdapter(excursionAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        filteredExcursions = new ArrayList<>();
-        for (Excursion e : repository.getAllExcursions()) {
-            if (e.getVacationID() == vacationID) filteredExcursions.add(e);
-        }
-        excursionAdapter.setExcursions(filteredExcursions);
+        repository.getAllExcursions().observe(this, new Observer<List<Excursion>>() {
+            @Override
+            public void onChanged(List<Excursion> allExcursions) {
+                filteredExcursions.clear();
+                for (Excursion e : allExcursions) {
+                    if (e.getVacationID() == vacationID) {
+                        filteredExcursions.add(e);
+                    }
+                }
+                excursionAdapter.setExcursions(filteredExcursions);
+            }
+        });
     }
 
     private void setUpStartDatePickerListener() {

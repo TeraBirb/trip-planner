@@ -1,6 +1,7 @@
 package com.example.d308_mobile_application_development_android.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,11 +45,17 @@ public class VacationList extends AppCompatActivity {
     }
 
     private void setUpRecyclerView() {
-        List<Vacation> allVacations = repository.getAllVacations();
         RecyclerView recyclerView = findViewById(R.id.recyclerViewVacations);
         final VacationAdapter vacationAdapter = new VacationAdapter(this);
         recyclerView.setAdapter(vacationAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        vacationAdapter.setVacations(allVacations);
+
+        // Observe the LiveData object
+        repository.getAllVacations().observe(this, new Observer<List<Vacation>>() {
+            @Override
+            public void onChanged(List<Vacation> vacations) {
+                vacationAdapter.setVacations(vacations);
+            }
+        });
     }
 }

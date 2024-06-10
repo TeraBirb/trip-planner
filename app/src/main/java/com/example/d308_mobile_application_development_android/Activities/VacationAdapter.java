@@ -77,6 +77,10 @@ public class VacationAdapter extends RecyclerView.Adapter<VacationAdapter.Vacati
     }
 
     public int getItemCount() {
-        return vacations.size();
+        if (vacations == null) {
+            return 0;
+        } else {
+            return vacations.size();
+        }
     }
 }

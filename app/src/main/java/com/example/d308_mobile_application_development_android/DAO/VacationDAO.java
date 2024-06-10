@@ -22,4 +22,6 @@ public interface VacationDAO {
     void delete(Vacation vacation);
     @Query("SELECT * FROM  VACATIONS ORDER BY vacationID ASC")
     LiveData<List<Vacation>> getAllVacations();
+    @Query("SELECT * FROM VACATIONS WHERE vacationID = :vacationId")
+    LiveData<Vacation> getVacationById(int vacationId);
 }

@@ -72,4 +72,8 @@ public class Repository {
             excursionDAO.delete(excursion);
         });
     }
+
+    public LiveData<Vacation> getVacationById(int vacationId) {
+        return vacationDAO.getVacationById(vacationId);
+    }
 }
