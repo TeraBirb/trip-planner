@@ -63,6 +63,7 @@ public class ExcursionDetails extends AppCompatActivity {
         excursionDate = getIntent().getStringExtra("date");
         vacationID = getIntent().getIntExtra("vacID", -1);
         excursionList = new ArrayList<Excursion>();
+
         // Retrieve all excursions
         repository.getAllExcursions().observe(this, new Observer<List<Excursion>>() {
             @Override
@@ -139,7 +140,7 @@ public class ExcursionDetails extends AppCompatActivity {
                 for (Excursion e : excursionList) {
                     if (e.getExcursionID() == excursionID) {
                         currentExcursion = e;
-                        break; // Exit loop once excursion is found
+                        break;
                     }
                 }
 

@@ -180,10 +180,6 @@ public class VacationDetails extends AppCompatActivity {
                                 vacation[0] = new Vacation(vacationID[0], title, accommodation, startDateString, endDateString);
                                 repository.insert(vacation[0]);
                                 Toast.makeText(VacationDetails.this, title + " was added.", Toast.LENGTH_LONG).show();
-                            } else {
-                                vacation[0] = new Vacation(vacationID[0], title, accommodation, startDateString, endDateString);
-                                repository.update(vacation[0]);
-                                Toast.makeText(VacationDetails.this, title + " was updated.", Toast.LENGTH_LONG).show();
                             }
 
                             Intent intent = new Intent(VacationDetails.this, VacationList.class);
