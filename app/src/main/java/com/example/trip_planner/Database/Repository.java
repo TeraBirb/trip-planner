@@ -1,13 +1,13 @@
-package com.example.d308_mobile_application_development_android.Database;
+package com.example.trip_planner.Database;
 
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.d308_mobile_application_development_android.DAO.ExcursionDAO;
-import com.example.d308_mobile_application_development_android.DAO.VacationDAO;
-import com.example.d308_mobile_application_development_android.Entities.Excursion;
-import com.example.d308_mobile_application_development_android.Entities.Vacation;
+import com.example.trip_planner.DAO.ExcursionDAO;
+import com.example.trip_planner.DAO.VacationDAO;
+import com.example.trip_planner.Entities.Excursion;
+import com.example.trip_planner.Entities.Vacation;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;

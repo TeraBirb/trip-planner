@@ -1,10 +1,10 @@
-package com.example.d308_mobile_application_development_android.Activities;
+package com.example.trip_planner.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.d308_mobile_application_development_android.Database.Repository;
+import com.example.trip_planner.Database.Repository;
 
 public class VacationViewModelFactory implements ViewModelProvider.Factory {
 

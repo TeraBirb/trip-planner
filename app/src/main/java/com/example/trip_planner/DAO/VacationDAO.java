@@ -1,4 +1,4 @@
-package com.example.d308_mobile_application_development_android.DAO;
+package com.example.trip_planner.DAO;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -8,7 +8,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.d308_mobile_application_development_android.Entities.Vacation;
+import com.example.trip_planner.Entities.Vacation;
 
 import java.util.List;
 

@@ -111,7 +111,7 @@
         android:id="@+id/textViewExcursions"
         android:layout_width="120dp"
         android:layout_height="32dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="128dp"
         android:gravity="center"
         android:text="Excursions"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -124,43 +124,43 @@
         android:id="@+id/recyclerViewExcursions"
         android:layout_width="342dp"
         android:layout_height="193dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewExcursions" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonAddExcursion" />
 
     <Button
         android:id="@+id/buttonAddExcursion"
         android:layout_width="190dp"
         android:layout_height="55dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="Add Excursion..."
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerViewExcursions" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewExcursions" />
 
     <Button
         android:id="@+id/buttonSaveVacation"
         android:layout_width="120dp"
         android:layout_height="55dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="36dp"
         android:text="Save"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonAddExcursion" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <Button
         android:id="@+id/buttonDeleteVacation"
         android:layout_width="120dp"
         android:layout_height="55dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="28dp"
         android:text="Delete"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonAddExcursion" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

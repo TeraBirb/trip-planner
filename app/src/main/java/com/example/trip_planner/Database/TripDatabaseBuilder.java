@@ -1,4 +1,4 @@
-package com.example.d308_mobile_application_development_android.Database;
+package com.example.trip_planner.Database;
 
 
 import android.content.Context;
@@ -7,10 +7,10 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.example.d308_mobile_application_development_android.DAO.ExcursionDAO;
-import com.example.d308_mobile_application_development_android.DAO.VacationDAO;
-import com.example.d308_mobile_application_development_android.Entities.Excursion;
-import com.example.d308_mobile_application_development_android.Entities.Vacation;
+import com.example.trip_planner.DAO.ExcursionDAO;
+import com.example.trip_planner.DAO.VacationDAO;
+import com.example.trip_planner.Entities.Excursion;
+import com.example.trip_planner.Entities.Vacation;
 
 @Database(entities = {Vacation.class, Excursion.class}, version = 2, exportSchema = false)
 public abstract class TripDatabaseBuilder extends RoomDatabase {

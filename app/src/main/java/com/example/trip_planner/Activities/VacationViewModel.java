@@ -1,10 +1,10 @@
-package com.example.d308_mobile_application_development_android.Activities;
+package com.example.trip_planner.Activities;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.d308_mobile_application_development_android.Database.Repository;
-import com.example.d308_mobile_application_development_android.Entities.Vacation;
+import com.example.trip_planner.Database.Repository;
+import com.example.trip_planner.Entities.Vacation;
 
 import java.util.List;
 

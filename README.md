@@ -1,7 +1,5 @@
 # Trip Planner
 
-The purpose of this application is to satisfy the requirements for the course D308 Mobile Application Development.
-
 This application allows users to add their planned vacations as well as any associated excursions within each vacation. Users may add, delete, or update vacations and excursions.
 
 

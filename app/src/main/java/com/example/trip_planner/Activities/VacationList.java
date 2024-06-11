@@ -1,4 +1,4 @@
-package com.example.d308_mobile_application_development_android.Activities;
+package com.example.trip_planner.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -10,9 +10,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.d308_mobile_application_development_android.Database.Repository;
-import com.example.d308_mobile_application_development_android.Entities.Vacation;
-import com.example.d308_mobile_application_development_android.R;
+import com.example.trip_planner.Database.Repository;
+import com.example.trip_planner.Entities.Vacation;
+import com.example.trip_planner.R;
 
 import java.util.List;
 

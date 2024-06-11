@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "d308-mobile-application-development-android"
+rootProject.name = "trip-planner"
 include(":app")

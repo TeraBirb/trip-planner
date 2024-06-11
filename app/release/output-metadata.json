@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.example.d308_mobile_application_development_android",
+  "applicationId": "com.example.trip_planner",
   "variantName": "release",
   "elements": [
     {

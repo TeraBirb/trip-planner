@@ -1,4 +1,4 @@
-package com.example.d308_mobile_application_development_android;
+package com.example.trip_planner;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.example.d308_mobile_application_development_android.Activities;
+package com.example.trip_planner.Activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.d308_mobile_application_development_android.Entities.Excursion;
-import com.example.d308_mobile_application_development_android.R;
+import com.example.trip_planner.R;
+import com.example.trip_planner.Entities.Excursion;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.d308_mobile_application_development_android.Activities;
+package com.example.trip_planner.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,10 +22,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.d308_mobile_application_development_android.Database.Repository;
-import com.example.d308_mobile_application_development_android.Entities.Excursion;
-import com.example.d308_mobile_application_development_android.Entities.Vacation;
-import com.example.d308_mobile_application_development_android.R;
+import com.example.trip_planner.Database.Repository;
+import com.example.trip_planner.Entities.Excursion;
+import com.example.trip_planner.Entities.Vacation;
+import com.example.trip_planner.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

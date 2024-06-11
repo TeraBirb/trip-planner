@@ -1,9 +1,7 @@
-package com.example.d308_mobile_application_development_android.Entities;
+package com.example.trip_planner.Entities;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
-import java.util.Date;
 
 @Entity(tableName = "vacations")
 public class Vacation {
